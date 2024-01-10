@@ -2,7 +2,7 @@ import StarRateIcon from '@mui/icons-material/StarRate';
 import { Typography } from '@mui/material';
 import styled from '@emotion/styled';
 
-import { Rating as RatingType } from '../type/product.type';
+import { Rate as RatingType } from '../type/product.type';
 type Props = {
   rating: RatingType;
 };

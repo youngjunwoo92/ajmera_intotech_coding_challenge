@@ -1,4 +1,4 @@
-export type Rating = {
+export type Rate = {
   rate: number;
   count: number;
 };
@@ -10,5 +10,5 @@ export interface Product {
   description: string;
   category: string;
   image: string;
-  rating: Rating;
+  rating: Rate;
 }

@@ -3,8 +3,8 @@ import styled from '@emotion/styled';
 
 import { formatUSD } from '../utilities/formatUSD';
 import { Product } from '../type/product.type';
-import { BaseProps } from '../App';
 import ProductRating from './ProductRating';
+import { BaseProps } from '../App';
 
 type StyledCardProps = {
   selected: boolean;
@@ -15,14 +15,11 @@ interface Props extends BaseProps {
 }
 
 export default function ProductCard({ product, onClick, selectedId }: Props) {
-  const handleClick = () => {
-    onClick(product.id);
-  };
   return (
     <StyledCard
       selected={selectedId === product.id}
       elevation={0}
-      onClick={handleClick}
+      onClick={() => onClick(product.id)}
     >
       <CardImageContainer>
         <img src={product.image} alt={product.title} />
@@ -30,13 +27,13 @@ export default function ProductCard({ product, onClick, selectedId }: Props) {
       </CardImageContainer>
       <CardBody>
         <div>
-          <Typography variant='caption' gutterBottom>
+          <Typography variant='caption' color='primary' gutterBottom>
             {product.category}
           </Typography>
           <Typography variant='h1' gutterBottom>
             {product.title}
           </Typography>
-          <Typography>{product.description}</Typography>
+          <Typography color='text.secondary'>{product.description}</Typography>
         </div>
         <div>
           <Typography variant='h2'>{formatUSD(product.price)}</Typography>
@@ -56,6 +53,7 @@ const StyledCard = styled(Card)<StyledCardProps>`
   cursor: pointer;
   transition: border 150ms ease-in;
   width: 100%;
+
   &:hover {
     border-color: #6941c6;
   }
@@ -87,7 +85,6 @@ const CardBody = styled.div`
     text-transform: capitalize;
     font-weight: 600;
     font-size: 1.4rem;
-    color: #6941c6;
     line-height: 20px;
   }
 
@@ -107,7 +104,6 @@ const CardBody = styled.div`
     font-weight: 500;
     letter-spacing: 1px;
     line-height: 28px;
-    color: #101828;
   }
 
   p {
@@ -118,6 +114,5 @@ const CardBody = styled.div`
     overflow: hidden;
     font-size: 1.8rem;
     line-height: 24px;
-    color: #475467;
   }
 `;

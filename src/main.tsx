@@ -14,6 +14,18 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 let theme = createTheme({
   typography: {
     fontFamily: ['Inter'].join(','),
+    allVariants: {
+      color: 'rgba(0,0,0,87%)',
+    },
+  },
+  palette: {
+    primary: {
+      main: '#6941c6',
+    },
+    text: {
+      primary: 'rgba(0,0,0, 87%)',
+      secondary: 'rgba(0,0,0, 60%)',
+    },
   },
 });
 theme = responsiveFontSizes(theme);

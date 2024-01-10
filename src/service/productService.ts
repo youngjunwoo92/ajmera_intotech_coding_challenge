@@ -9,7 +9,7 @@ export async function getProducts() {
   return res.data;
 }
 
-export async function getProduct(id: number) {
+export async function getProduct(id: number | null) {
   const res = await axiosClient.get<Product>(`products/${id}`);
   return res.data;
 }
@@ -21,9 +21,10 @@ export function useGetProducts() {
   });
 }
 
-export function useGetProduct(id: number) {
+export function useGetProduct(id: number | null) {
   return useQuery<Product, AxiosError>({
     queryKey: ['products', id],
     queryFn: () => getProduct(id),
+    enabled: id !== null,
   });
 }

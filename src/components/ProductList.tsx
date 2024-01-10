@@ -26,7 +26,7 @@ const Layout = styled.aside`
   overflow-y: auto;
   overflow-x: hidden;
   padding: 32px;
-
+  width: 512px;
   @media (max-width: 768px) {
     padding: 16px;
     flex-grow: 1;
