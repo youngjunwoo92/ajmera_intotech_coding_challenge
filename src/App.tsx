@@ -21,5 +21,9 @@ const Layout = styled.div`
     background-color: salmon;
     height: 100%;
     flex-grow: 1;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 `;
