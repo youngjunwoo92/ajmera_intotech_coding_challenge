@@ -3,16 +3,30 @@ import styled from '@emotion/styled';
 
 import { formatUSD } from '../utilities/formatUSD';
 import { Product } from '../type/product.type';
+import { BaseProps } from '../App';
+import ProductRating from './ProductRating';
 
-type Props = {
-  product: Product;
+type StyledCardProps = {
+  selected: boolean;
 };
 
-export default function ProductCard({ product }: Props) {
+interface Props extends BaseProps {
+  product: Product;
+}
+
+export default function ProductCard({ product, onClick, selectedId }: Props) {
+  const handleClick = () => {
+    onClick(product.id);
+  };
   return (
-    <StyledCard key={product.id} elevation={0}>
+    <StyledCard
+      selected={selectedId === product.id}
+      elevation={0}
+      onClick={handleClick}
+    >
       <CardImageContainer>
         <img src={product.image} alt={product.title} />
+        <ProductRating rating={product.rating} />
       </CardImageContainer>
       <CardBody>
         <div>
@@ -32,18 +46,18 @@ export default function ProductCard({ product }: Props) {
   );
 }
 
-const StyledCard = styled(Card)`
+const StyledCard = styled(Card)<StyledCardProps>`
   display: flex;
   gap: 8px;
   border-radius: 12px;
-  border: 1px solid #eaecf0;
+  border: 1px solid ${(props) => (props.selected ? '#6941c6' : '#eaecf0')};
   overflow: hidden;
   padding: 16px;
   cursor: pointer;
   transition: border 150ms ease-in;
   width: 100%;
   &:hover {
-    border-color: salmon;
+    border-color: #6941c6;
   }
 `;
 
@@ -54,6 +68,7 @@ const CardImageContainer = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 8px;
+  position: relative;
 
   & > img {
     aspect-ratio: 1 / 1;

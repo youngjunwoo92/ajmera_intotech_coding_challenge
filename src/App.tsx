@@ -1,10 +1,29 @@
 import styled from '@emotion/styled';
 import ProductList from './components/ProductList';
+import { useState } from 'react';
+
+export type BaseProps = {
+  onClick: (id: number | null) => void;
+  selectedId: number | null;
+};
 
 export default function App() {
+  const [selectedId, setSelectedId] = useState<null | number>(null);
+
+  console.log(selectedId);
+
+  const handleClick = (id: number | null) => {
+    // If clicked product that is displaying, wet selecetdId to null.
+    if (id === selectedId) {
+      return setSelectedId(null);
+    }
+
+    setSelectedId(id);
+  };
+
   return (
     <Layout>
-      <ProductList />
+      <ProductList selectedId={selectedId} onClick={handleClick} />
       <main>Product Detail</main>
     </Layout>
   );

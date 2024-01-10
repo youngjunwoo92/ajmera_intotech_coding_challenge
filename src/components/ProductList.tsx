@@ -1,14 +1,20 @@
 import styled from '@emotion/styled';
 import ProductCard from './ProductCard';
+import { BaseProps } from '../App';
 
-export default function ProductList() {
+export default function ProductList({ onClick, selectedId }: BaseProps) {
   //   const { data } = useGetProducts();
 
   return (
     <Layout>
       <Container>
         {(data ?? []).map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            selectedId={selectedId}
+            onClick={onClick}
+            key={product.id}
+            product={product}
+          />
         ))}
       </Container>
     </Layout>
