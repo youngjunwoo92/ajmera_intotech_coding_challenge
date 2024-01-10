@@ -1,15 +1,18 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
-  CssBaseline,
-  ThemeProvider,
-  createTheme,
+  QueryObserverOptions,
+  QueryClientProvider,
+  QueryClient,
+} from '@tanstack/react-query';
+import {
   responsiveFontSizes,
+  ThemeProvider,
+  CssBaseline,
+  createTheme,
 } from '@mui/material';
 
-import './index.css';
 import App from './App.tsx';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import './index.css';
 
 let theme = createTheme({
   typography: {
@@ -30,6 +33,10 @@ let theme = createTheme({
 });
 theme = responsiveFontSizes(theme);
 
+const config: QueryObserverOptions = {
+  suspense: true,
+};
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -38,7 +45,7 @@ const queryClient = new QueryClient({
       refetchOnReconnect: false,
       retry: false,
       staleTime: 5 * 60 * 1000,
-      suspense: true,
+      ...config,
     },
   },
 });
