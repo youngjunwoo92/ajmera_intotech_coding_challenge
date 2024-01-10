@@ -1,4 +1,5 @@
 import { IconButton, Typography } from '@mui/material';
+import { useMediaQuery } from 'react-responsive';
 import WestIcon from '@mui/icons-material/West';
 import styled from '@emotion/styled';
 
@@ -12,21 +13,25 @@ type Props = {
 };
 
 export default function ProductDetail({ selectedId, onClose }: Props) {
+  const isMobile = useMediaQuery({ query: '(max-width:768px)' });
   const { data } = useGetProduct(selectedId);
 
   if (!data) {
     onClose();
     return null;
   }
+  const { image, category, title, rating, description, price } = data;
 
   return (
     <Layout>
-      <CloseButton onClick={onClose}>
-        <WestIcon fontSize='large' />
-      </CloseButton>
+      {isMobile && (
+        <CloseButton onClick={onClose}>
+          <WestIcon fontSize='large' />
+        </CloseButton>
+      )}
       <Container>
         <ImageContainer>
-          <img src={data.image} />
+          <img src={image} />
         </ImageContainer>
       </Container>
       <DetailBody>
@@ -37,16 +42,16 @@ export default function ProductDetail({ selectedId, onClose }: Props) {
           className='sub-heading'
           color='primary'
         >
-          {data.category}
+          {category}
         </Typography>
         <Typography gutterBottom variant='h1' className='heading'>
-          {data.title}
+          {title}
         </Typography>
-        <Typography className='content'>{data.description}</Typography>
+        <Typography className='content'>{description}</Typography>
         <DetailFooter>
-          <ProductDetailRating rating={data.rating} />
+          <ProductDetailRating rating={rating} />
           <Typography fontSize={24} fontWeight={600}>
-            {formatUSD(data.price)}
+            {formatUSD(price)}
           </Typography>
         </DetailFooter>
       </DetailBody>
@@ -116,13 +121,8 @@ const DetailFooter = styled.div`
 `;
 
 const CloseButton = styled(IconButton)`
-  display: none;
   position: absolute;
   background-color: white;
   transform: translate(50%, 50%);
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-
-  @media (max-width: 768px) {
-    display: block;
-  }
 `;
