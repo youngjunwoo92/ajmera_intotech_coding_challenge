@@ -1,20 +1,32 @@
-import { Typography } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
+import WestIcon from '@mui/icons-material/West';
 import styled from '@emotion/styled';
 
+import { useGetProduct } from '../service/productService';
 import ProductDetailRating from './ProductDetailRating';
 import { formatUSD } from '../utilities/formatUSD';
-import { Product } from '../type/product.type';
 
 type Props = {
-  product: Product;
+  selectedId: number | null;
+  onClose: () => void;
 };
 
-export default function ProductDetail({ product }: Props) {
+export default function ProductDetail({ selectedId, onClose }: Props) {
+  const { data } = useGetProduct(selectedId);
+
+  if (!data) {
+    onClose();
+    return null;
+  }
+
   return (
     <Layout>
+      <CloseButton onClick={onClose}>
+        <WestIcon fontSize='large' />
+      </CloseButton>
       <Container>
         <ImageContainer>
-          <img src={product.image} />
+          <img src={data.image} />
         </ImageContainer>
       </Container>
       <DetailBody>
@@ -25,16 +37,16 @@ export default function ProductDetail({ product }: Props) {
           className='sub-heading'
           color='primary'
         >
-          {product.category}
+          {data.category}
         </Typography>
         <Typography gutterBottom variant='h1' className='heading'>
-          {product.title}
+          {data.title}
         </Typography>
-        <Typography className='content'>{product.description}</Typography>
+        <Typography className='content'>{data.description}</Typography>
         <DetailFooter>
-          <ProductDetailRating rating={product.rating} />
+          <ProductDetailRating rating={data.rating} />
           <Typography fontSize={24} fontWeight={600}>
-            {formatUSD(product.price)}
+            {formatUSD(data.price)}
           </Typography>
         </DetailFooter>
       </DetailBody>
@@ -42,9 +54,10 @@ export default function ProductDetail({ product }: Props) {
   );
 }
 
-const Layout = styled.div`
+export const Layout = styled.div`
   height: 100%;
   width: 100%;
+  position: relative;
 
   .sub-heading {
     line-height: 20px;
@@ -65,7 +78,7 @@ const Layout = styled.div`
   }
 `;
 
-const Container = styled.div`
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -79,6 +92,10 @@ const ImageContainer = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 8px;
+
+  @media (max-width: 768px) {
+    aspect-ratio: 1 / 1;
+  }
 
   & > img {
     aspect-ratio: 1 / 1;
@@ -96,4 +113,16 @@ const DetailBody = styled.div`
 
 const DetailFooter = styled.div`
   margin-top: 24px;
+`;
+
+const CloseButton = styled(IconButton)`
+  display: none;
+  position: absolute;
+  background-color: white;
+  transform: translate(50%, 50%);
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
 `;

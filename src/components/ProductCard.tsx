@@ -45,7 +45,7 @@ export default function ProductCard({ product, onClick, selectedId }: Props) {
 
 const StyledCard = styled(Card)<StyledCardProps>`
   display: flex;
-  gap: 8px;
+  gap: 20px;
   border-radius: 12px;
   border: 1px solid ${(props) => (props.selected ? '#6941c6' : '#eaecf0')};
   overflow: hidden;

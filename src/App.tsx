@@ -1,9 +1,12 @@
+import { Suspense, useState } from 'react';
+import { Dialog, Typography } from '@mui/material';
+import { useMediaQuery } from 'react-responsive';
 import styled from '@emotion/styled';
-import ProductList from './components/ProductList';
-import { useState } from 'react';
-import { Typography } from '@mui/material';
-import { useGetProduct } from './service/productService';
+
+import ProductDetailFallback from './fallback/ProductDetailFallback';
+import ProductListFallback from './fallback/ProductListFallback';
 import ProductDetail from './components/ProductDetail';
+import ProductList from './components/ProductList';
 
 export type BaseProps = {
   onClick: (id: number | null) => void;
@@ -12,8 +15,7 @@ export type BaseProps = {
 
 export default function App() {
   const [selectedId, setSelectedId] = useState<null | number>(null);
-
-  // const { data, isLoading } = useGetProduct(selectedId);
+  const isMobile = useMediaQuery({ query: '(max-width:768px)' });
 
   const handleClick = (id: number | null) => {
     // If clicked product that is displaying, wet selecetdId to null.
@@ -24,16 +26,31 @@ export default function App() {
     setSelectedId(id);
   };
 
-  // if (isLoading) {
-  //   return <h1>loading...</h1>;
-  // }
+  const handleClose = () => {
+    setSelectedId(null);
+  };
 
   return (
     <Layout>
-      <ProductList selectedId={selectedId} onClick={handleClick} />
+      <Suspense fallback={<ProductListFallback />}>
+        <ProductList selectedId={selectedId} onClick={handleClick} />
+      </Suspense>
       <main>
-        {data ? (
-          <ProductDetail product={data} />
+        {isMobile ? (
+          <Dialog
+            fullScreen
+            open={selectedId !== null}
+            onClose={handleClose}
+            PaperProps={{ style: { padding: '16px' } }}
+          >
+            <Suspense fallback={<ProductDetailFallback />}>
+              <ProductDetail selectedId={selectedId} onClose={handleClose} />
+            </Suspense>
+          </Dialog>
+        ) : selectedId !== null ? (
+          <Suspense fallback={<ProductDetailFallback />}>
+            <ProductDetail selectedId={selectedId} onClose={handleClose} />
+          </Suspense>
         ) : (
           <EmptyContainer>
             <Typography gutterBottom className='sub-heading'>
@@ -54,11 +71,15 @@ export default function App() {
 }
 
 const Layout = styled.div`
+  position: relative;
   max-width: 1920px;
   width: 100%;
   height: 100dvh;
   margin: 0 auto;
   display: flex;
+
+  @media (max-width: 768px) {
+  }
 
   main {
     width: 100%;
@@ -68,14 +89,15 @@ const Layout = styled.div`
     justify-content: center;
     align-items: center;
     padding: 32px;
+
     @media (max-width: 768px) {
       display: none;
-      padding: 16px;
     }
   }
 `;
 
 const EmptyContainer = styled.div`
+  text-align: center;
   .sub-heading {
     font-weight: 600;
     font-size: 1.6rem;
@@ -97,16 +119,16 @@ const EmptyContainer = styled.div`
   }
 `;
 
-const data = {
-  id: 1,
-  title: 'Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops',
-  price: 109.95,
-  description:
-    'Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday',
-  category: "men's clothing",
-  image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
-  rating: {
-    rate: 3.9,
-    count: 120,
-  },
-};
+// const data = {
+//   id: 1,
+//   title: 'Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops',
+//   price: 109.95,
+//   description:
+//     'Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday',
+//   category: "men's clothing",
+//   image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+//   rating: {
+//     rate: 3.9,
+//     count: 120,
+//   },
+// };
